@@ -1,3 +1,14 @@
 #!/bin/sh
+# Find SystemCall Number on ARM machines.
+# Locates and prints the requested system call number in decimal and hex.
+# 
+# Author: Jonathan Bowie
 
-grep -E "__NR_${1}[^0-9a-zA-Z]" /usr/include/arm-linux-gnueabihf/asm/unistd.h | cut -d+ -f2 | sed s/\)//g
+
+X=$(grep -E "__NR_${1}[^0-9a-zA-Z_]" /usr/include/arm-linux-gnueabihf/asm/unistd.h | cut -d+ -f2 | sed s/\)//g)
+
+if [ ${X} > 0 ]; then
+	printf "%d 0x%x\n" $X $X
+else
+	echo "System call not found!"
+fi
